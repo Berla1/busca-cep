@@ -1,24 +1,69 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+import { CiSearch } from "react-icons/ci";
+import { useState } from 'react';
+import api from './services/api';
 
 function App() {
+
+  const [input, setInput] = useState("");
+  const [cep, setCep] = useState("")
+
+  async function handleSearch(){
+    if (input.length < 8){
+      alert('Digite um CEP válido')
+      return
+    }
+
+    try{
+      const response = await api.get(`${input}/json`)
+      setCep(response.data)
+      setInput('')
+      
+    }
+    catch{
+      alert('CEP não encontrado')
+      setInput('')
+    }
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className="container">
+      <h1 className="titulo">Buscador CEP</h1>
+
+        <div className="input-container">
+          <input
+            type="text"
+            placeholder="Digite o CEP..."
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+          />
+
+        <button 
+          className="busca-btn" 
+          onClick={handleSearch}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <CiSearch size={25} color='#fff'/>
+        </button>
+
+        </div>
+        {Object.keys(cep).length > 0 && (
+          <main>
+          <h2>CEP: {cep.cep}</h2>
+
+          <ul>
+            <li>Rua: {cep.logradouro}</li>
+            <li>Bairro: {cep.bairro}</li>
+            <li>Complemento: {cep.complemento}</li>
+            <li>Cidade: {cep.localidade}</li>
+            <li>Estado: {cep.uf}</li>
+          </ul>
+
+        </main> 
+        )}
+         
+
+      </div>
   );
 }
 
