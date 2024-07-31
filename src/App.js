@@ -8,7 +8,9 @@ function App() {
   const [input, setInput] = useState("");
   const [cep, setCep] = useState("")
 
-  async function handleSearch(){
+
+  async function handleSearch(e){
+    e.preventDefault()
     if (input.length < 8){
       alert('Digite um CEP válido')
       return
@@ -38,14 +40,15 @@ function App() {
             value={input}
             onChange={(event) => setInput(event.target.value)}
           />
-
+      
+      <form>
         <button 
           className="busca-btn" 
           onClick={handleSearch}
-        >
+          >
           <CiSearch size={25} color='#fff'/>
         </button>
-
+      </form>
         </div>
         {Object.keys(cep).length > 0 && (
           <main>
@@ -61,9 +64,11 @@ function App() {
 
         </main> 
         )}
-         
+        {Object.keys(cep).length === 0 &&(
+         <h4 className='alerta'>(Utilize apenas números)</h4>
+        )}
 
-      </div>
+    </div>
   );
 }
 
